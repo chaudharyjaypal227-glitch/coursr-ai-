@@ -1,0 +1,6 @@
+{
+  "name": "CourseAI",
+  "description": "Premium modern SaaS-style education platform with a futuristic 3D-inspired visual design.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

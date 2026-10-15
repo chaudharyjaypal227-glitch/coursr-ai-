@@ -1,0 +1,46 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.email != null && (
+          request.auth.token.email == 'chaudharyjaypal227@gmail.com' ||
+          request.auth.token.email == 'admin@courseai.com' ||
+          request.auth.token.email.lower() == 'chaudharyjaypal227@gmail.com' ||
+          request.auth.token.email.lower() == 'admin@courseai.com'
+        )) ||
+        (request.auth.token.keys().hasAny(['role']) && request.auth.token.role == 'admin')
+      );
+    }
+
+    // Course downloadable files and archives (PDF, ZIP, guides)
+    match /course_files/{allPaths=**} {
+      // Authorized admins can upload, replace, and delete course files
+      allow write: if isAdmin();
+      // Authenticated users (students with purchase/enrollment) can read/download
+      allow read: if isAuthenticated() || isAdmin();
+    }
+
+    // Course-specific asset folders
+    match /courses/{courseId}/{fileName} {
+      allow write: if isAdmin();
+      allow read: if isAuthenticated() || isAdmin();
+    }
+
+    // Course thumbnails and preview assets
+    match /thumbnails/{fileName} {
+      allow write: if isAdmin();
+      allow read: if true;
+    }
+
+    // Default deny for all other locations
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

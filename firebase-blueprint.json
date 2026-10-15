@@ -1,0 +1,129 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access control",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["student", "admin"] },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "purchasedCourses": { "type": "number" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Standard video/interactive course",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "description": { "type": "string" },
+        "instructor": { "type": "string" },
+        "thumbnail": { "type": "string" },
+        "price": { "type": "number" },
+        "status": { "type": "string", "enum": ["published", "draft"] },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "instructor", "price"]
+    },
+    "PdfCourse": {
+      "title": "PdfCourse",
+      "description": "PDF & ZIP multi-file downloadable product catalog",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "fullDescription": { "type": "string" },
+        "thumbnailUrl": { "type": "string" },
+        "salePrice": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "category": { "type": "string" },
+        "instructor": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "published", "unpublished"] },
+        "featured": { "type": "boolean" },
+        "files": { "type": "array" },
+        "pdfFileUrl": { "type": "string" },
+        "pdfFileName": { "type": "string" },
+        "pdfFileSize": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "publishedAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "shortDescription", "salePrice", "status"]
+    },
+    "PdfPurchase": {
+      "title": "PdfPurchase",
+      "description": "Verified student purchase record for PDF/ZIP materials",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "pdfCourseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentId": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "purchasedAt": { "type": "string" }
+      },
+      "required": ["userId", "pdfCourseId", "amount", "paymentStatus"]
+    },
+    "Enrollment": {
+      "title": "Enrollment",
+      "description": "Video course enrollment record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "courseId": { "type": "string" },
+        "enrolledAt": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["userId", "courseId", "enrolledAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Payment and order record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "courseId": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "amount", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User profiles and RBAC permissions"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "Video course catalog"
+    },
+    "/pdfCourses/{courseId}": {
+      "schema": "PdfCourse",
+      "description": "Downloadable PDF and ZIP courses"
+    },
+    "/pdfPurchases/{purchaseId}": {
+      "schema": "PdfPurchase",
+      "description": "Purchased PDF courses access records"
+    },
+    "/enrollments/{enrollmentId}": {
+      "schema": "Enrollment",
+      "description": "Enrolled video courses access records"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Transaction and order records"
+    }
+  }
+}
